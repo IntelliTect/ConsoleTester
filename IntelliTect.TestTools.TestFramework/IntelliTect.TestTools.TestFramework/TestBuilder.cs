@@ -69,6 +69,16 @@ namespace IntelliTect.TestTools.TestFramework
             return this;
         }
 
+        /// <summary>
+        /// Testing...
+        /// </summary>
+        /// <returns></returns>
+        public TestBuilder AddLogger<TService, TImplementation>() where TService : ILogger
+        {
+            Services.AddSingleton(typeof(TService), typeof(TImplementation));
+            return this;
+        }
+
         public void ExecuteTestCase()
         {
             #region move to a Build() method and validate all dependencies are satisfied?
