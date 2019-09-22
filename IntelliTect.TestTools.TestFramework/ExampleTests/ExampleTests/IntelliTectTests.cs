@@ -25,9 +25,13 @@ namespace ExampleTests
                     IsBodyAvailable = true
                 };
 
+            var logs = new LoggingDatabase("Test1");
+
             TestBuilder builder = new TestBuilder();
             builder
                 .AddLogger<ILogger, DebugLogger>()
+                .RegisterPreTestBlockSteps(logs.LogTestBlockStart)
+                .RegisterPostTestBlockSteps(logs.LogTestBlockEnd)
                 .AddDependencyService<IWebDriver>(new WebDriverFactory("Chrome").Driver)
                 .AddDependencyService<Harness.IntelliTectWebpage>()
                 .AddTestBlock<TestBlocks.NavigateToWebsite>()

@@ -79,6 +79,18 @@ namespace IntelliTect.TestTools.TestFramework
             return this;
         }
 
+        public TestBuilder RegisterPreTestBlockSteps(Action action)
+        {
+            PreTestBlockActions.Add(action);
+            return this;
+        }
+
+        public TestBuilder RegisterPostTestBlockSteps(Action action)
+        {
+            PostTestBlockActions.Add(action);
+            return this;
+        }
+
         public void ExecuteTestCase()
         {
             #region move to a Build() method and validate all dependencies are satisfied?
@@ -89,6 +101,11 @@ namespace IntelliTect.TestTools.TestFramework
             Exception testBlockException = null;
             using (var scope = serviceProvider.CreateScope())
             {
+                foreach(var preaction in PreTestBlockActions)
+                {
+                    preaction();
+                }
+
                 HashSet<object> testBlockResults = new HashSet<object>();
                 foreach (var tb in TestBlocksAndParams)
                 {
@@ -207,6 +224,7 @@ namespace IntelliTect.TestTools.TestFramework
                         break;
                     }
 
+                    // Run PostTestBlock actions here
                     logger.Info($"---Test block {tb.TestBlockType} completed successfully.---");
                 }
             }
@@ -234,5 +252,7 @@ namespace IntelliTect.TestTools.TestFramework
 
         private List<(Type TestBlockType, object[] TestBlockParameters)> TestBlocksAndParams { get; } = new List<(Type TestBlockType, object[] TestBlockParameters)>();
         private IServiceCollection Services { get; } = new ServiceCollection();
+        private List<Action> PreTestBlockActions { get; } = new List<Action>();
+        private List<Action> PostTestBlockActions { get; } = new List<Action>();
     }
 }

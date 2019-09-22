@@ -24,7 +24,7 @@ namespace ExampleTests
 
         private void LogToDebug(string message)
         {
-            System.Diagnostics.Debug.WriteLine($"TESTING CUSTOMER LOGGER -- {message}");
+            System.Diagnostics.Debug.WriteLine($"TESTING CUSTOM LOGGER -- {message}");
         }
     }
 }
